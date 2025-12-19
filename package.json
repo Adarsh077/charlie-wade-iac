@@ -1,0 +1,19 @@
+{
+  "name": "charlie-wade",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.0",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.955.0",
+    "@aws-sdk/s3-request-presigner": "^3.955.0",
+    "sst": "3.17.25"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.159"
+  }
+}
