@@ -17,6 +17,11 @@ export default $config({
       handler: "src/chapters.list",
     });
 
+    api.route("PUT /chapters/sync", {
+      link: [bucket],
+      handler: "src/chapters.sync",
+    });
+
     api.route("GET /chapters/{name}", {
       link: [bucket],
       handler: "src/chapters.get",

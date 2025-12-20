@@ -6,6 +6,13 @@ import {
   ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
 
+import {
+  getLastAddedChapterNumber,
+  getLinks,
+  calculateTotalPages,
+  groupPdfs,
+} from "./utils";
+
 const s3 = new S3Client({});
 
 export const list = async () => {
@@ -54,6 +61,21 @@ export const get = async (events) => {
     body: JSON.stringify({
       status: "success",
       body: { url },
+    }),
+  };
+};
+
+export const sync = async () => {
+  const lastChapterAdded = await getLastAddedChapterNumber();
+  const links = await getLinks(lastChapterAdded);
+  const pdfsWithPageCount = await calculateTotalPages(links);
+  const pdfs = await groupPdfs(pdfsWithPageCount);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      status: "success",
+      body: { links, pdfsWithPageCount, pdfs },
     }),
   };
 };
