@@ -11,6 +11,7 @@ import {
   getLinks,
   calculateTotalPages,
   groupPdfs,
+  downloadAndMergePdf,
 } from "./utils";
 
 const s3 = new S3Client({});
@@ -68,14 +69,25 @@ export const get = async (events) => {
 export const sync = async () => {
   const lastChapterAdded = await getLastAddedChapterNumber();
   const links = await getLinks(lastChapterAdded);
+  if (!links.length) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "success",
+        body: "No new chapters detected.",
+      }),
+    };
+  }
+
   const pdfsWithPageCount = await calculateTotalPages(links);
   const pdfs = await groupPdfs(pdfsWithPageCount);
+  const response = await downloadAndMergePdf(pdfs);
 
   return {
     statusCode: 200,
     body: JSON.stringify({
       status: "success",
-      body: { links, pdfsWithPageCount, pdfs },
+      body: response,
     }),
   };
 };

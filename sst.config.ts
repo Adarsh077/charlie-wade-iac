@@ -9,7 +9,9 @@ export default $config({
     };
   },
   async run() {
-    const bucket = new sst.aws.Bucket("CharlieWadeBucket");
+    const bucket = new sst.aws.Bucket("CharlieWadeBucket", {
+      access: "public",
+    });
     const api = new sst.aws.ApiGatewayV2("CharlieWadeApi");
 
     api.route("GET /chapters", {
