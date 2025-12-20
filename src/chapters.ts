@@ -74,7 +74,7 @@ export const sync = async () => {
       statusCode: 200,
       body: JSON.stringify({
         status: "success",
-        body: "No new chapters detected.",
+        body: [],
       }),
     };
   }
