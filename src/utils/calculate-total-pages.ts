@@ -29,10 +29,27 @@ async function downloadAndProcessPDF(url: string): Promise<PdfResult | null> {
 async function main(urls: string[]): Promise<PdfResult[] | undefined> {
   try {
     const results = [];
+    const CONCURRENCY_LIMIT = 10;
 
-    for (const url of urls) {
-      const result = await downloadAndProcessPDF(url);
-      if (result) results.push(result);
+    // Loop through the URLs in steps of 5
+    for (let i = 0; i < urls.length; i += CONCURRENCY_LIMIT) {
+      const chunk = urls.slice(i, i + CONCURRENCY_LIMIT);
+
+      console.log(
+        `Processing batch ${Math.floor(i / CONCURRENCY_LIMIT) + 1}...`
+      );
+
+      // 1. Map the chunk to an array of Promises
+      const batchPromises = chunk.map((url) => {
+        console.log(`Downloading ${url}`);
+        return downloadAndProcessPDF(url);
+      });
+
+      // 2. Wait for all 5 requests in this batch to resolve
+      const batchResults = await Promise.all(batchPromises);
+
+      // 3. Add results to the main array
+      results.push(...batchResults);
     }
 
     const validResults = results.filter(

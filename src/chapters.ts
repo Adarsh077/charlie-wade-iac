@@ -68,7 +68,12 @@ export const get = async (events) => {
 
 export const sync = async () => {
   const lastChapterAdded = await getLastAddedChapterNumber();
+
+  console.log({ lastChapterAdded });
+
   const links = await getLinks(lastChapterAdded);
+  console.log({ links });
+
   if (!links.length) {
     return {
       statusCode: 200,
@@ -80,7 +85,10 @@ export const sync = async () => {
   }
 
   const pdfsWithPageCount = await calculateTotalPages(links);
+  console.log({ pdfsWithPageCount });
+
   const pdfs = await groupPdfs(pdfsWithPageCount);
+
   const response = await downloadAndMergePdf(pdfs);
 
   return {
