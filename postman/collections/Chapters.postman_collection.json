@@ -1,0 +1,46 @@
+{
+  "info": {
+    "_postman_id": "d31ad1dc-c75b-4274-9337-5f7954a11a5d",
+    "name": "Chapters",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Sync",
+      "id": "b4c7ac2e-c936-4f63-bf7c-68636a01965a",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseurl}}/chapters/sync",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "chapters",
+            "sync"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List chapters",
+      "id": "3a0256a3-fe7b-4cc0-8c08-53be6bc449df",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseurl}}/chapters",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "chapters"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
