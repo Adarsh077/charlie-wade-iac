@@ -41,6 +41,55 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Set Last Read Page",
+      "id": "5f03c32b-3d61-471a-b06f-30aa3ae933c5",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"page\": 40\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseurl}}/chapters/chapters-1-100/page",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "chapters",
+            "chapters-1-100",
+            "page"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Last Read Page",
+      "id": "e188d867-96a3-43e2-8aa6-2a2438b40526",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseurl}}/chapters/chapters-1-100/page",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "chapters",
+            "chapters-1-100",
+            "page"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
