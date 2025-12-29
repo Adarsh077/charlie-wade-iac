@@ -5,6 +5,12 @@ import {
   GetObjectCommand,
   ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+} from "@aws-sdk/lib-dynamodb";
 
 import {
   getLastAddedChapterNumber,
@@ -37,8 +43,8 @@ export const list = async () => {
   };
 };
 
-export const get = async (events) => {
-  const filename = events?.pathParameters?.name;
+export const get = async (event) => {
+  const filename = event?.pathParameters?.name;
 
   if (!filename) {
     return {
@@ -62,6 +68,107 @@ export const get = async (events) => {
     body: JSON.stringify({
       status: "success",
       body: { url },
+    }),
+  };
+};
+
+export const handlePageChange = async (event) => {
+  const filename = event?.pathParameters?.name;
+
+  if (!filename) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({
+        status: "error",
+        message: "name is required.",
+      }),
+    };
+  }
+
+  if (!event.body) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: "page is required!",
+      }),
+    };
+  }
+
+  let requestBody;
+  try {
+    requestBody = JSON.parse(event.body);
+  } catch (error) {
+    return { statusCode: 400, body: "Invalid JSON" };
+  }
+
+  const { page } = requestBody;
+
+  const client = new DynamoDBClient();
+  const docClient = DynamoDBDocumentClient.from(client);
+
+  const command = new PutCommand({
+    TableName: Resource.CharlieWadeTable.name,
+    Item: {
+      chapter: filename,
+      page,
+    },
+  });
+
+  try {
+    await docClient.send(command);
+  } catch (error) {
+    console.log(error);
+    return { statusCode: 400 };
+  }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      status: "success",
+    }),
+  };
+};
+
+export const getLastReadPage = async (event) => {
+  const filename = event?.pathParameters?.name;
+
+  if (!filename) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({
+        status: "error",
+        message: "name is required.",
+      }),
+    };
+  }
+
+  const client = new DynamoDBClient({ region: "ap-south-1" });
+  const docClient = DynamoDBDocumentClient.from(client);
+
+  const command = new GetCommand({
+    TableName: Resource.CharlieWadeTable.name,
+    Key: {
+      chapter: filename,
+    },
+  });
+
+  const response = await docClient.send(command);
+
+  if (!response.Item) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "success",
+        body: { page: 1 },
+      }),
+    };
+  }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      status: "success",
+      body: { page: response.Item.page },
     }),
   };
 };
