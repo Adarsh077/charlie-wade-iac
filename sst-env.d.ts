@@ -5,6 +5,18 @@
 
 declare module "sst" {
   export interface Resource {
+    "CharlieWadeApi": {
+      "type": "sst.aws.ApiGatewayV2"
+      "url": string
+    }
+    "CharlieWadeBucket": {
+      "name": string
+      "type": "sst.aws.Bucket"
+    }
+    "CharlieWadeTable": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />
