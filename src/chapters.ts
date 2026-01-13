@@ -106,6 +106,27 @@ export const handlePageChange = async (event) => {
   const client = new DynamoDBClient();
   const docClient = DynamoDBDocumentClient.from(client);
 
+  const getLastReadPageCommand = new GetCommand({
+    TableName: Resource.CharlieWadeTable.name,
+    Key: {
+      chapter: filename,
+    },
+  });
+
+  const response = await docClient.send(command);
+
+  if (response.Item) {
+    if (response.Item.page <= page) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          status: "success",
+        }),
+      };
+    }
+  }
+
+
   const command = new PutCommand({
     TableName: Resource.CharlieWadeTable.name,
     Item: {
