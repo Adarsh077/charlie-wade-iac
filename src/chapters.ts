@@ -116,7 +116,7 @@ export const handlePageChange = async (event) => {
   const response = await docClient.send(command);
 
   if (response.Item) {
-    if (response.Item.page <= page) {
+    if (response.Item.page >= page) {
       return {
         statusCode: 200,
         body: JSON.stringify({
